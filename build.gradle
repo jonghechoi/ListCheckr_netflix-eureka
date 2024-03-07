@@ -17,16 +17,29 @@ repositories {
 
 ext {
     set('springCloudVersion', "2023.0.0")
+    profile = project.hasProperty('profile') ? project.profile : 'local'
 }
+println("현재 profile : " + profile)
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    /* Build */
+    implementation 'org.springframework.boot:spring-boot-gradle-plugin:3.2.1'
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources-env/${profile}"
+        }
     }
 }
 
